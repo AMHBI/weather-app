@@ -1,16 +1,46 @@
 <!DOCTYPE html>
 
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Weather App</title>
-        <link rel="shortcut icon" href="./assets/icons/cloudy-day.svg" type="image/x-icon">
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="./css/main.css">
-    </head>
-    <body>
-        <script src="./js/app.js"></script>
-    </body>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Weather App</title>
+    <link
+      rel="shortcut icon"
+      href="./assets/icons/cloudy-day.svg"
+      type="image/x-icon" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="./css/main.css" />
+  </head>
+  <body>
+    <div
+      id="search"
+      class="w-4/5 md:w-2/5 bg-white/40 rounded-2xl mt-10 mx-auto h-16 flex items-center justify-center md:justify-evenly px-2">
+      <!-- Search bar -->
+      <input
+        type="text"
+        placeholder="Search city..."
+        class="bg-transparent md:p-4 placeholder:text-white font-sans font-semibold text-xl text-white w-1/2 focus:border-none focus:outline-none" />
+      <button
+        class="bg-violet-600 text-white px-5 py-2 rounded-xl font-medium hover:bg-violet-800 transition-colors duration-200">
+        Search
+      </button>
+      <img
+        id="location-logo"
+        src="./assets/icons/location.svg"
+        alt="location"
+        title="Search by your location"
+        class="size-10 hover:drop-shadow-2xl ml-1 hover:cursor-pointer" />
+    </div>
+    <div
+      id="current"
+      class="bg-white/40 backdrop-blur-md w-4/5 md:w-2/5 mx-auto my-10 rounded-xl p-6 shadow-md shadow-gray-600 ring-2 ring-white/50 relative">
+     
+    </div>
+    <div id="forecast"></div>
+    <div id="loader"></div>
+    <div id="modal"></div>
+    <script src="./js/app.js" type="module"></script>
+  </body>
 </html>

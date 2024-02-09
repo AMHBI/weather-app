@@ -2,7 +2,11 @@
 module.exports = {
   content: ["./js/*.js","./*.html"],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage:{
+        "back-grad":"radial-gradient(#b57bee,#392d69)"
+      }
+    },
   },
   plugins: [],
 }
