@@ -1,4 +1,4 @@
-import { getData, sunrise, sunset } from "./functions.js";
+import { dayPicker, getData, sunrise, sunset } from "./functions.js";
 const searchDiv = document.getElementById("search");
 const searchInput = searchDiv.querySelector("input");
 const searchBtn = searchDiv.querySelector("button");
@@ -8,19 +8,19 @@ const locationLogo = document.getElementById("location-logo");
 
 const getCurrentData = async () => {
   const data = await getData("current", searchInput.value);
-  return data
+  return data;
 };
 const getCurrentDataByLocation = async () => {
-  const data = await getData("current",getUserLocation());
-  return data
+  const data = await getData("current", getUserLocation());
+  return data;
 };
 const getForecastData = async () => {
   const data = await getData("forecast", searchInput.value);
-  return data
+  return data;
 };
 const getForecastDataByLocation = async () => {
-  const data = await getData("forecast",getUserLocation());
-  return data
+  const data = await getData("forecast", getUserLocation());
+  return data;
 };
 
 const renderCurrnetWeather = async (data) => {
@@ -66,47 +66,56 @@ const renderCurrnetWeather = async (data) => {
   }
 };
 const renderForecastWeather = async (data) => {
-
+  const filterdData = data.list.filter((item) =>
+    item.dt_txt.endsWith("12:00:00")
+  );
+  console.log(filterdData);
   try {
-    const forecastJSX = `
+    const forecastJSX = filterdData.map(
+      (item) => `
     <div
         class="w-[40%] md:w-[15%] bg-white/40 text-white backdrop-blur-2xl m-2 rounded-2xl flex flex-col justify-center items-center p-5">
         <img
-          src="./assets/icons/cloudy-day.svg"
+          src="./assets/icons/openw-icons/${item.weather[0].icon}.svg"
           alt="Weather Icon"
           class="size-24" />
-        <h5 class="font-semibold text-xl">Wednesday</h5>
+        <h5 class="font-semibold text-xl">${dayPicker(
+          new Date(item.dt * 1000).getDay()
+        )}</h5>
         <div class="flex gap-3 mt-4">
-          <span>Cloudy</span>
-          <span>34°C</span>
+          <span>${item.weather[0].main}</span>
+          <span>${Math.round(item.main.temp)}°C</span>
         </div>
         <div class="mt-5 flex gap-3 items-center">
           <img
-            src="./assets/icons/sunrise.svg"
-            alt="sunrise Icon"
+            src="./assets/icons/humidity.svg"
+            alt="humidity Icon"
             class="size-8" />
-          <span>7:56</span>
+          <span>${item.main.humidity}%</span>
         </div>
-        <div class="flex gap-3 items-center">
-          <img
-            src="./assets/icons/sunset.svg"
-            alt="sunset Icon"
-            class="size-8" />
-          <span>17:56</span>
-        </div>
+        
       </div>
     `
-forecastDiv.innerHTML = forecastJSX
-  }catch(error){}
+    );
+    forecastDiv.innerHTML = forecastJSX;
+  } catch (error) {}
 };
-const getUserLocation = () => {
-  const cordinates = navigator.geolocation.getCurrentPosition((position) => {
-    const location = {
-      lat: position.coords.latitude,
-      lon: position.coords.longitude,
-    };
-    return location
-  });
+
+const locationHandler = async () => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(positionCallback, errorCallback);
+  } else {
+    alert("Your Browser  does not support GeoLocation");
+  }
+};
+const positionCallback = async (position) => {
+  const currentData = await getData("current", position.coords);
+  const forecastData = await getData("forecast", position.coords);
+  renderCurrnetWeather(currentData);
+  renderForecastWeather(forecastData);
+};
+const errorCallback = async (error) => {
+  console.log(error.message);
 };
 const searchHandler = async () => {
   const cityName = searchInput.value;
@@ -114,9 +123,9 @@ const searchHandler = async () => {
     alert("Enter Valid Name!");
   }
   const currentData = await getData("current", cityName);
-  const forecastData = await getData("forecast",cityName)
+  const forecastData = await getData("forecast", cityName);
   renderCurrnetWeather(currentData);
-  renderForecastWeather()
+  renderForecastWeather(forecastData);
 };
 searchBtn.addEventListener("click", searchHandler);
-locationLogo.addEventListener("click", getUserLocation);
+locationLogo.addEventListener("click", locationHandler);

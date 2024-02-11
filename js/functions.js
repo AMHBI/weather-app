@@ -1,6 +1,6 @@
 const BASE_URL = "https://api.openweathermap.org/data/2.5";
 const API_KEY = "3c5533cee858f34fb863ab53b0e00f06";
-
+const daysInWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const getData = async (type, data) => {
   let url = null;
   if (typeof data === "string") {
@@ -18,10 +18,10 @@ const getData = async (type, data) => {
   } else {
     switch (type) {
       case "current":
-        url = `${BASE_URL}/weather?lat=${data.lat}&lon=${data.lon}&appid=${API_KEY}&units=metric`;
+        url = `${BASE_URL}/weather?lat=${data.latitude}&lon=${data.longitude}&appid=${API_KEY}&units=metric`;
         break;
       case "forecast":
-        url = `${BASE_URL}/forecast?lat=${data.lat}&lon=${data.lon}&appid=${API_KEY}&units=metric`;
+        url = `${BASE_URL}/forecast?lat=${data.latitude}&lon=${data.longitude}&appid=${API_KEY}&units=metric`;
         break;
       default:
         console.log("Error type");
@@ -46,4 +46,7 @@ const sunset = (data) => {
     new Date(data * 1000).getHours() + ":" + new Date(data * 1000).getMinutes();
   return sunset;
 };
-export { getData, sunrise, sunset };
+const dayPicker = date =>{
+return daysInWeek[date]
+}
+export { getData, sunrise, sunset, dayPicker };
