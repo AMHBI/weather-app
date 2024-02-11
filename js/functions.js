@@ -18,27 +18,32 @@ const getData = async (type, data) => {
   } else {
     switch (type) {
       case "current":
-        url = `${BASE_URL}/weather?lat=${data.latitude}&lon=${data.longitude}&appid=${API_KEY}&units=metric`;
+        url = `${BASE_URL}/weather?lat=${data.lat}&lon=${data.lon}&appid=${API_KEY}&units=metric`;
         break;
       case "forecast":
-        url = `${BASE_URL}/forecast?lat=${data.latitude}&lon=${data.longitude}&appid=${API_KEY}&units=metric`;
+        url = `${BASE_URL}/forecast?lat=${data.lat}&lon=${data.lon}&appid=${API_KEY}&units=metric`;
         break;
       default:
         console.log("Error type");
         break;
     }
   }
-  const apidata = await fetch(url);
-  const json = await apidata.json();
-  return json;
+  try {
+    const apidata = await fetch(url);
+    const json = await apidata.json();
+    return json;
+  } catch (error) {
+    console.log(error);
+  }
 };
 const sunrise = (data) => {
-  const sunrise = new Date(data *1000).getHours() + ":" + new Date(data*1000).getMinutes();
+  const sunrise =
+    new Date(data * 1000).getHours() + ":" + new Date(data * 1000).getMinutes();
   return sunrise;
 };
 const sunset = (data) => {
-  const sunset = new Date(data*1000).getHours() + ":" + new Date(data*1000).getMinutes();
+  const sunset =
+    new Date(data * 1000).getHours() + ":" + new Date(data * 1000).getMinutes();
   return sunset;
 };
 export { getData, sunrise, sunset };
-
