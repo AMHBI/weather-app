@@ -49,7 +49,7 @@ const renderCurrnetWeather = async (data) => {
     currentDiv.innerHTML = currentJSX;
   } catch (error) {
     currentDiv.innerHTML = `<div id="loader"></div>`
-    console.log(error);
+    
   }
 };
 const renderForecastWeather = async (data) => {
