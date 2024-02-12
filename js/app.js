@@ -5,24 +5,10 @@ const searchBtn = searchDiv.querySelector("button");
 const currentDiv = document.getElementById("current");
 const forecastDiv = document.getElementById("forecast");
 const locationLogo = document.getElementById("location-logo");
-
-const getCurrentData = async () => {
-  const data = await getData("current", searchInput.value);
-  return data;
-};
-const getCurrentDataByLocation = async () => {
-  const data = await getData("current", getUserLocation());
-  return data;
-};
-const getForecastData = async () => {
-  const data = await getData("forecast", searchInput.value);
-  return data;
-};
-const getForecastDataByLocation = async () => {
-  const data = await getData("forecast", getUserLocation());
-  return data;
-};
-
+const modal = document.getElementById("modal");
+const modalClose = document.getElementById("modal-close");
+const modalMessage = document.getElementById("modal-message");
+const loader = document.getElementById("loader")
 const renderCurrnetWeather = async (data) => {
   currentDiv.innerHTML = "";
   try {
@@ -62,16 +48,17 @@ const renderCurrnetWeather = async (data) => {
      `;
     currentDiv.innerHTML = currentJSX;
   } catch (error) {
+    currentDiv.innerHTML = `<div id="loader"></div>`
     console.log(error);
   }
 };
 const renderForecastWeather = async (data) => {
-  const filterdData = data.list.filter((item) =>
-    item.dt_txt.endsWith("12:00:00")
-  );
-  console.log(filterdData);
+  forecastDiv.innerHTML = "" ;
+  const filterdData = data.list?.filter((item) =>
+    item.dt_txt.endsWith("12:00:00"))
+  
   try {
-    const forecastJSX = filterdData.map(
+    const forecastJSX = filterdData?.map(
       (item) => `
     <div
         class="w-[40%] md:w-[15%] bg-white/40 text-white backdrop-blur-2xl m-2 rounded-2xl flex flex-col justify-center items-center p-5">
@@ -97,8 +84,12 @@ const renderForecastWeather = async (data) => {
       </div>
     `
     );
-    forecastDiv.innerHTML = forecastJSX;
-  } catch (error) {}
+    if(!forecastJSX) forecastDiv.innerHTML = ""
+    else forecastDiv.innerHTML = forecastJSX ;
+  } catch (error) {
+    currentDiv.innerHTML = `<div id="loader"></div>`
+    forecastDiv.innerHTML =""
+  }
 };
 
 const locationHandler = async () => {
@@ -115,17 +106,35 @@ const positionCallback = async (position) => {
   renderForecastWeather(forecastData);
 };
 const errorCallback = async (error) => {
-  console.log(error.message);
+  showModal(error.message);
 };
 const searchHandler = async () => {
   const cityName = searchInput.value;
-  if (!cityName) {
-    alert("Enter Valid Name!");
-  }
+  if (!cityName) showModal("Enter Valid Name!")
+  
+  currentDiv.innerHTML = `<div id="loader"></div>`
   const currentData = await getData("current", cityName);
   const forecastData = await getData("forecast", cityName);
   renderCurrnetWeather(currentData);
   renderForecastWeather(forecastData);
 };
+const closeHandler = ()=>{
+  modal.classList.add("hidden")
+  modal.classList.remove("block")
+}
+const showModal= message =>{
+  modalMessage.innerText = message
+  modal.classList.remove("hidden")
+  modal.classList.add("block")
+}
+const initHandler = async () => {
+  const currentData = await getData("current", "tehran");
+  const forecastData = await getData("forecast", "tehran");
+  renderCurrnetWeather(currentData);
+  renderForecastWeather(forecastData);
+  
+};
 searchBtn.addEventListener("click", searchHandler);
 locationLogo.addEventListener("click", locationHandler);
+modalClose.addEventListener("click",closeHandler);
+document.addEventListener("DOMContentLoaded", initHandler);

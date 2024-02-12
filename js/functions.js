@@ -33,7 +33,7 @@ const getData = async (type, data) => {
     const json = await apidata.json();
     return json;
   } catch (error) {
-    console.log(error);
+    return
   }
 };
 const sunrise = (data) => {
