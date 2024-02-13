@@ -84,8 +84,9 @@ const renderForecastWeather = async (data) => {
       </div>
     `
     );
+    console.log(forecastJSX);
     if(!forecastJSX) forecastDiv.innerHTML = ""
-    else forecastDiv.innerHTML = forecastJSX ;
+    else forecastDiv.innerHTML = forecastJSX.join(" ") ;
   } catch (error) {
     currentDiv.innerHTML = `<div id="loader"></div>`
     forecastDiv.innerHTML =""
